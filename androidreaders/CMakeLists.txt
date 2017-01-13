@@ -2,14 +2,16 @@ cmake_minimum_required(VERSION 2.6)
 
 project(androidreaders)
 
-set(INCLUDE_FOLDER  ${CMAKE_CURRENT_SOURCE_DIR}/../../pluginsreaderproviders/iso7816
-					${CMAKE_CURRENT_SOURCE_DIR}/../../pluginscards/iso7816
-					${CMAKE_CURRENT_SOURCE_DIR}/../../pluginscards/desfire)
-
-INCLUDE_DIRECTORIES(${INCLUDE_FOLDER})
+add_definitions(-DUNIX)
 
 file(GLOB SRCS *.cpp)
 file(GLOB include *.hpp)
+
+file(GLOB include_readercardadapters ${CMAKE_CURRENT_SOURCE_DIR}/readercardadapters/*.hpp)
+SOURCE_GROUP("Header Files\\readercardadapters" FILES ${include_readercardadapters})
+
+file(GLOB source_readercardadapters ${CMAKE_CURRENT_SOURCE_DIR}/readercardadapters/*.cpp)
+SOURCE_GROUP("Source Files\\readercardadapters" FILES ${source_readercardadapters})
 
 set(INCLUDE_LIB ${include} ${include_readercardadapters})
 set(SOURCE_LIB ${SRCS} ${source_readercardadapters})
