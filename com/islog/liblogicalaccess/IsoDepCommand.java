@@ -13,20 +13,18 @@ public class IsoDepCommand {
 
     private static IsoDep myCard = null;
     private static String mycardType = "";
-    private static byte[] myCsn = null;
     private static final Object lock = new Object();
 
-    private static final byte[] DF_GET_VERSION = new byte[]{(byte)0x90, (byte)0x60, (byte)0x00, (byte)0x00, (byte)0x00};
-    private static final byte[] DF_ADDITIONAL_FRAME = new byte[]{(byte)0x90, (byte)0xAF, (byte)0x00, (byte)0x00, (byte)0x00};
+    //private static final byte[] DF_GET_VERSION = new byte[]{(byte)0x90, (byte)0x60, (byte)0x00, (byte)0x00, (byte)0x00};
+    //private static final byte[] DF_ADDITIONAL_FRAME = new byte[]{(byte)0x90, (byte)0xAF, (byte)0x00, (byte)0x00, (byte)0x00};
 
     public static void setMyCard(IsoDep card, String cardType)
     {
         synchronized (lock) {
             myCard = card;
             mycardType = cardType;
-            myCsn = null;
 
-            try {
+           /* try {
                 if (cardType == "DESFire")
                 {
                     myCard.setTimeout(1000);
@@ -79,7 +77,7 @@ public class IsoDepCommand {
             } catch (Exception e) {
                 removeCard();
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
@@ -90,7 +88,7 @@ public class IsoDepCommand {
         }
     }
 
-    public static String getMyCSN() throws Exception
+    /*public static String getMyCSN() throws Exception
     {
         synchronized (lock) {
             if (myCsn == null)
@@ -102,7 +100,7 @@ public class IsoDepCommand {
 
             return sb.toString();
         }
-    }
+    }*/
 
     public static boolean connect()
     {
@@ -130,6 +128,7 @@ public class IsoDepCommand {
                 return;
             try {
                 myCard.close();
+                removeCard();
             } catch (IOException e) {
                 removeCard();
                 throw e;
@@ -154,7 +153,6 @@ public class IsoDepCommand {
     {
         myCard = null;
         mycardType = "";
-        myCsn = null;
     }
 }
 

@@ -43,7 +43,8 @@ namespace logicalaccess
 		std::shared_ptr<ReaderCardAdapter> rca(new ReaderCardAdapter());
 		rca->setDataTransport(getDataTransport());
 
-		d_card_type = CHIP_UNKNOWN;
+		d_card_type = "DESFire";
+		//d_card_type = CHIP_UNKNOWN;
 	}
 
 	AndroidReaderUnit::~AndroidReaderUnit()
@@ -147,12 +148,25 @@ namespace logicalaccess
 
 	bool AndroidReaderUnit::connect()
 	{
-		//TODO
-		return true;
+		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
+		jmethodID connectCard = m_env->GetStaticMethodID(jNDKhelper, "connect", "()Z");
+		jboolean connected = m_env->CallStaticBooleanMethod(jNDKhelper, connectCard);
+		m_env->DeleteLocalRef(cls);
+
+		JniHelper::CheckException(m_env);
+		return (bool)(connected == JNI_TRUE);
 	}
 
 	void AndroidReaderUnit::disconnect()
 	{
+		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
+		jmethodID disconnectCard = m_env->GetStaticMethodID(jNDKhelper, "disconnect", "()V");
+		m_env->CallStaticVoidMethod(jNDKhelper, disconnectCard);
+		m_env->DeleteLocalRef(cls);
+
+		JniHelper::CheckException(m_env);
 	}
 
 	bool AndroidReaderUnit::connectToReader()

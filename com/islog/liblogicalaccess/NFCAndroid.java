@@ -35,8 +35,9 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
         if (adapter != null && adapter.isEnabled()) {
             Bundle options = new Bundle();
-            options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 5000);
+            options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 2); //should be 5000 but this tablet seems to us seconds ? wtf
             adapter.enableReaderMode(context, this, NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK, options);
+            Log.d("NFCAndroid", "Change check delay");
         }
     }
 
@@ -44,10 +45,10 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
         IsoDep isoDep = IsoDep.get(tag);
         NfcA nfcA = NfcA.get(tag);
+        if (nfcA != null)
+            Log.d("NFCAndroid", "NFCA");
         if (isoDep != null)
             IsoDepIntent(tag);
-        else if (nfcA != null)
-            Log.d("NFCAndroid", "NFCA");
        /* else if ()
             MifareClassicIntent()*/
     }
@@ -56,7 +57,7 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
         Log.d("NFCAndroid", "ISODEP");
         IsoDep tag = IsoDep.get(mtag);
 
-        IsoDepCommand.setMyCard(tag, "DESFire");
+        IsoDepCommand.setMyCard(tag, "ISODEP");
     }
 
     public static synchronized void openSettingWindow()
