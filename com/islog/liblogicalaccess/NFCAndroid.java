@@ -13,14 +13,13 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.NfcA;
 import android.widget.Toast;
 
-import com.islog.liblogicalaccess.IsoDepCommand;
+import com.islog.liblogicalaccess.AndroidTag;
 
 /**
  * Created by Adrien on 27/03/2015.
  */
 public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
-    private static final Object lock = new Object();
     private static Activity mInstance = null;
 
     public NFCAndroid(Activity context) {
@@ -42,22 +41,7 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
     }
 
     public void onTagDiscovered(Tag tag) {
-
-        IsoDep isoDep = IsoDep.get(tag);
-        NfcA nfcA = NfcA.get(tag);
-        if (nfcA != null)
-            Log.d("NFCAndroid", "NFCA");
-        if (isoDep != null)
-            IsoDepIntent(tag);
-       /* else if ()
-            MifareClassicIntent()*/
-    }
-
-    void IsoDepIntent(Tag mtag) {
-        Log.d("NFCAndroid", "ISODEP");
-        IsoDep tag = IsoDep.get(mtag);
-
-        IsoDepCommand.setMyCard(tag, "ISODEP");
+        AndroidTag.setCurrentCard(tag);
     }
 
     public static synchronized void openSettingWindow()

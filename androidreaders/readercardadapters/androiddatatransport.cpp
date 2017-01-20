@@ -8,18 +8,12 @@ namespace logicalaccess
     void AndroidDataTransport::send(const std::vector<unsigned char> &cmd)
     {
         std::vector<unsigned char> result;
-        //QAndroidJniEnvironment env;
-
         auto env = AndroidReaderUnit::getEnv();
 
         jbyteArray array = env->NewByteArray (cmd.size());
         env->SetByteArrayRegion(array, 0, cmd.size(), reinterpret_cast<jbyte*>((char*)&cmd[0]));
 
-      /*  QAndroidJniObject resultArray = QAndroidJniObject::callStaticObjectMethod("com/islog/androidnfc/IsoDepCommand",
-                                                                                  "execCommand",
-                                                                                  "([B)[B", array);*/
-
-        jclass cls = env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+        jclass cls = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
         jclass jNDKhelper = (jclass) env->NewGlobalRef(cls);
         jmethodID execCommand = env->GetStaticMethodID(jNDKhelper, "execCommand", "([B)[B");
         jbyteArray resultDataArray = (jbyteArray) env->CallStaticObjectMethod(jNDKhelper, execCommand, array);

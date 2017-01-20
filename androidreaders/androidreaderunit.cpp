@@ -79,13 +79,44 @@ namespace logicalaccess
 			std::shared_ptr<ReaderCardAdapter> rca = std::make_shared<ISO7816ReaderCardAdapter>();
 			std::shared_ptr<Commands> commands;
 
-			if (type == "DESFire" || type == "DESFireEV1")
+			//get Uid from android
+			std::vector<unsigned char> result;
+			auto env = AndroidReaderUnit::getEnv();
+			jclass cls = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
+			jclass jNDKhelper = (jclass) env->NewGlobalRef(cls);
+			jmethodID getUID = env->GetStaticMethodID(jNDKhelper, "getUID", "()[B");
+			jbyteArray resultDataArray = (jbyteArray) env->CallStaticObjectMethod(jNDKhelper, getUID);
+			env->DeleteLocalRef(cls);
+
+			JniHelper::CheckException(env);
+
+			if (resultDataArray)
+			{
+				jsize resultSize = env->GetArrayLength(resultDataArray);
+
+				if (resultSize > 0)
+				{
+					jboolean t = false;
+					jbyte *jresult = env->GetByteArrayElements(resultDataArray, &t);
+					result.assign(jresult, jresult + resultSize);
+					env->ReleaseByteArrayElements(resultDataArray, jresult, JNI_ABORT);
+
+					chip->setChipIdentifier(result);
+				}
+			}
+
+			if (type == "DESFire" || type == "DESFireEV1" || type == "ISODEP")
 			{
 				LOG(LogLevel::INFOS) << "Mifare DESFire EV1 Chip created";
 				rca->setResultChecker(std::make_shared<DESFireISO7816ResultChecker>());
 				commands = LibraryManager::getInstance()->getCommands("DESFireEV1ISO7816");
 				*(void**)(&setcryptocontextfct) = LibraryManager::getInstance()->getFctFromName("setCryptoContextDESFireEV1ISO7816Commands", LibraryManager::READERS_TYPE);
 				setcryptocontextfct(&commands, &chip);
+			}
+			else if (type == "NFCA")
+			{
+				//Mifare classic, ultralight & C
+				return chip;
 			}
 			else
 				return chip;
@@ -108,10 +139,10 @@ namespace logicalaccess
 		std::chrono::steady_clock::time_point const clock_timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(maxwait);
 		do
 		{
-			jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+			jclass cls = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
 			jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
-			jmethodID getMycardType = m_env->GetStaticMethodID(jNDKhelper, "getMycardType", "()Ljava/lang/String;");
-			jstring jCardType = (jstring) m_env->CallStaticObjectMethod(jNDKhelper, getMycardType);
+			jmethodID getCurrentCardType = m_env->GetStaticMethodID(jNDKhelper, "getCurrentCardType", "()Ljava/lang/String;");
+			jstring jCardType = (jstring) m_env->CallStaticObjectMethod(jNDKhelper, getCurrentCardType);
 			m_env->DeleteLocalRef(cls);
 			const char *s = m_env->GetStringUTFChars(jCardType, NULL);
 			cardType = s;
@@ -136,7 +167,7 @@ namespace logicalaccess
 
 	bool AndroidReaderUnit::waitRemoval(unsigned int maxwait)
 	{
-		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
 		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
 		jmethodID removeCard = m_env->GetStaticMethodID(jNDKhelper, "removeCard", "()V");
 		m_env->CallStaticVoidMethod(jNDKhelper, removeCard);
@@ -148,7 +179,7 @@ namespace logicalaccess
 
 	bool AndroidReaderUnit::connect()
 	{
-		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
 		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
 		jmethodID connectCard = m_env->GetStaticMethodID(jNDKhelper, "connect", "()Z");
 		jboolean connected = m_env->CallStaticBooleanMethod(jNDKhelper, connectCard);
@@ -160,7 +191,7 @@ namespace logicalaccess
 
 	void AndroidReaderUnit::disconnect()
 	{
-		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/IsoDepCommand");
+		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
 		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);
 		jmethodID disconnectCard = m_env->GetStaticMethodID(jNDKhelper, "disconnect", "()V");
 		m_env->CallStaticVoidMethod(jNDKhelper, disconnectCard);
