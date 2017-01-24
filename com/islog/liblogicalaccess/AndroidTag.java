@@ -1,8 +1,13 @@
 package com.islog.liblogicalaccess;
 
 
+import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.util.Log;
 import java.io.ByteArrayOutputStream;
@@ -30,22 +35,77 @@ public class AndroidTag {
         return new String(hexChars);
     }
 
+    private static String getTagInfo(Tag tag) {
+        String info = new String();
+
+        // Tech List
+        String[] techList = tag.getTechList();
+
+        // Mifare Classic/UltraLight Info
+        String type = "Unknown";
+        for(int i = 0; i < techList.length; i++) {
+            if(techList[i].equals(MifareClassic.class.getName())) {
+                MifareClassic mifareClassicTag = MifareClassic.get(tag);
+
+                // Type Info
+                switch (mifareClassicTag.getType()) {
+                    case MifareClassic.TYPE_CLASSIC:
+                        type = "Mifare1K";
+                        break;
+                    case MifareClassic.TYPE_PLUS:
+                        type = "MifarePlus2K";
+                        break;
+                    /*case MifareClassic.TYPE_PRO:
+                        type = "Pro";
+                        break;*/
+                }
+
+            } else if(techList[i].equals(MifareUltralight.class.getName())) {
+                MifareUltralight mifareUlTag = MifareUltralight.get(tag);
+
+                // Type Info
+                switch (mifareUlTag.getType()) {
+                    case MifareUltralight.TYPE_ULTRALIGHT:
+                        type = "MifareUltralight";
+                        break;
+                    case MifareUltralight.TYPE_ULTRALIGHT_C:
+                        type = "MifareUltralightC";
+                        break;
+                }
+                info = "Mifare " + type + "\n";
+            } else if(techList[i].equals(IsoDep.class.getName())) {
+                info = "DESFire"; //We guess it...
+            }/* else if(techList[i].equals(Ndef.class.getName())) {
+                Ndef ndefTag = Ndef.get(tag);
+                info += "Is Writable: " + ndefTag.isWritable() + "\n" +
+                        "Can Make ReadOnly: " + ndefTag.canMakeReadOnly() + "\n";
+            } else if(techList[i].equals(NdefFormatable.class.getName())) {
+                NdefFormatable ndefFormatableTag = NdefFormatable.get(tag);
+            }*/
+
+            Log.d("card detection", info);
+        }
+        return info;
+    }
+
     public static void setCurrentCard(Tag tag)
     {
         synchronized (lock) {
-
             myTag = tag;
 
             mIsoDep = IsoDep.get(tag);
             mNfcA = NfcA.get(tag);
 
-            if (mIsoDep != null) {
-                Log.d("NFCAndroid", "ISODEP id: " + bytesToHex(tag.getId()));
-                mycardType = "ISODEP";
-            }
-            else if (mNfcA != null) {
-                Log.d("NFCAndroid", "NFCA id: " + bytesToHex(tag.getId()));
-                mycardType = "NFCA";
+            mycardType = getTagInfo(tag);
+
+            if (mycardType == "") {
+                if (mIsoDep != null) {
+                    Log.d("NFCAndroid", "ISODEP id: " + bytesToHex(tag.getId()));
+                    mycardType = "DESFire"; //lets say it is desfire...
+                } else if (mNfcA != null) {
+                    Log.d("NFCAndroid", "NFCA id: " + bytesToHex(tag.getId()));
+                    mycardType = "Mifare1K"; //Lets say it is Mifare1k...
+                }
             }
         }
     }

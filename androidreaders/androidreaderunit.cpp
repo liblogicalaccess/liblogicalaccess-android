@@ -27,6 +27,7 @@
 #include "readercardadapters/androiddatatransport.hpp"
 #include "androidreaderunitconfiguration.hpp"
 #include "jnihelper.h"
+#include "../../../liblogicalaccess/plugins/pluginscards/desfire/desfirecommands.hpp"
 
 
 namespace logicalaccess
@@ -43,8 +44,8 @@ namespace logicalaccess
 		std::shared_ptr<ReaderCardAdapter> rca(new ReaderCardAdapter());
 		rca->setDataTransport(getDataTransport());
 
-		d_card_type = "DESFire";
-		//d_card_type = CHIP_UNKNOWN;
+	//	d_card_type = "DESFire";
+		d_card_type = CHIP_UNKNOWN;
 	}
 
 	AndroidReaderUnit::~AndroidReaderUnit()
@@ -105,9 +106,16 @@ namespace logicalaccess
 				}
 			}
 
-			if (type == "DESFire" || type == "DESFireEV1" || type == "ISODEP")
+			if (type == "DESFire")
 			{
 				LOG(LogLevel::INFOS) << "Mifare DESFire EV1 Chip created";
+				rca->setResultChecker(std::make_shared<DESFireISO7816ResultChecker>());
+				commands = LibraryManager::getInstance()->getCommands("DESFireISO7816");
+				*(void**)(&setcryptocontextfct) = LibraryManager::getInstance()->getFctFromName("setCryptoContextDESFireEV1ISO7816Commands", LibraryManager::READERS_TYPE);
+				setcryptocontextfct(&commands, &chip);
+			}
+			else if (type == "DESFireEV1")
+			{
 				rca->setResultChecker(std::make_shared<DESFireISO7816ResultChecker>());
 				commands = LibraryManager::getInstance()->getCommands("DESFireEV1ISO7816");
 				*(void**)(&setcryptocontextfct) = LibraryManager::getInstance()->getFctFromName("setCryptoContextDESFireEV1ISO7816Commands", LibraryManager::READERS_TYPE);
@@ -127,6 +135,15 @@ namespace logicalaccess
 				commands->setReaderCardAdapter(rca);
 				commands->setChip(chip);
 				chip->setCommands(commands);
+			}
+
+			if (type == "DESFire")
+			{
+				struct logicalaccess::DESFireCommands::DESFireCardVersion dataVersion;
+				connect(); // have to for android :'(
+				std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)->getVersion(dataVersion);
+				if (dataVersion.hardwareMjVersion >= 1)
+					return createChip("DESFireEV1");
 			}
 		}
 		return chip;
