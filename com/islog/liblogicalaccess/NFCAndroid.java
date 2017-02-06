@@ -1,19 +1,13 @@
 package com.islog.liblogicalaccess;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.os.Bundle;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.NfcA;
 import android.widget.Toast;
-
-import com.islog.liblogicalaccess.AndroidTag;
 
 /**
  * Created by Adrien on 27/03/2015.
@@ -21,10 +15,12 @@ import com.islog.liblogicalaccess.AndroidTag;
 public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
     private static Activity mInstance = null;
+    private static NFCEvent mNfcEvent = null;
 
-    public NFCAndroid(Activity context) {
+    public NFCAndroid(Activity context, NFCEvent nfcEvent) {
 
         mInstance = context;
+        mNfcEvent = nfcEvent;
 
         if (!mInstance.getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {
             Toast.makeText(mInstance.getApplicationContext(), "Your device does not support NFC. You will not be able to encode cards.", Toast.LENGTH_LONG).show();
@@ -42,6 +38,8 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
     public void onTagDiscovered(Tag tag) {
         AndroidTag.setCurrentCard(tag);
+        if (mNfcEvent != null)
+            mNfcEvent.onTagDiscovered(tag);
     }
 
     public static synchronized void openSettingWindow()
