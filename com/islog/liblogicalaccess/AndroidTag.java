@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by Adrien on 23/01/14.
  */
-public class AndroidTag {
+class AndroidTag {
 
     private static NfcA mNfcA = null;
     private static IsoDep mIsoDep = null;
@@ -24,8 +24,8 @@ public class AndroidTag {
     private static String mycardType = "";
     private static final Object lock = new Object();
 
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ ) {
             int v = bytes[j] & 0xFF;
@@ -36,15 +36,15 @@ public class AndroidTag {
     }
 
     private static String getTagInfo(Tag tag) {
-        String info = new String();
+        String info = "";
 
         // Tech List
         String[] techList = tag.getTechList();
 
         // Mifare Classic/UltraLight Info
         String type = "Unknown";
-        for(int i = 0; i < techList.length; i++) {
-            if(techList[i].equals(MifareClassic.class.getName())) {
+        for (String aTechList : techList) {
+            if (aTechList.equals(MifareClassic.class.getName())) {
                 MifareClassic mifareClassicTag = MifareClassic.get(tag);
 
                 // Type Info
@@ -60,7 +60,7 @@ public class AndroidTag {
                         break;*/
                 }
 
-            } else if(techList[i].equals(MifareUltralight.class.getName())) {
+            } else if (aTechList.equals(MifareUltralight.class.getName())) {
                 MifareUltralight mifareUlTag = MifareUltralight.get(tag);
 
                 // Type Info
@@ -73,7 +73,7 @@ public class AndroidTag {
                         break;
                 }
                 info = "Mifare " + type + "\n";
-            } else if(techList[i].equals(IsoDep.class.getName())) {
+            } else if (aTechList.equals(IsoDep.class.getName())) {
                 info = "DESFire"; //We guess it...
             }/* else if(techList[i].equals(Ndef.class.getName())) {
                 Ndef ndefTag = Ndef.get(tag);
@@ -88,7 +88,7 @@ public class AndroidTag {
         return info;
     }
 
-    public static void setCurrentCard(Tag tag)
+    static void setCurrentCard(Tag tag)
     {
         synchronized (lock) {
             myTag = tag;
