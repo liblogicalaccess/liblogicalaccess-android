@@ -10,6 +10,10 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.util.Log;
+
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -41,9 +45,9 @@ class AndroidTag {
         // Tech List
         String[] techList = tag.getTechList();
 
-        // Mifare Classic/UltraLight Info
-        String type = "Unknown";
         for (String aTechList : techList) {
+            // Mifare Classic/UltraLight Info
+            String type = "Unknown";
             if (aTechList.equals(MifareClassic.class.getName())) {
                 MifareClassic mifareClassicTag = MifareClassic.get(tag);
 
@@ -83,7 +87,7 @@ class AndroidTag {
                 NdefFormatable ndefFormatableTag = NdefFormatable.get(tag);
             }*/
 
-            Log.d("card detection", info);
+            Logger.d(info);
         }
         return info;
     }
@@ -100,10 +104,10 @@ class AndroidTag {
 
             if (mycardType == "") {
                 if (mIsoDep != null) {
-                    Log.d("NFCAndroid", "ISODEP id: " + bytesToHex(tag.getId()));
+                    //Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
                     mycardType = "DESFire"; //lets say it is desfire...
                 } else if (mNfcA != null) {
-                    Log.d("NFCAndroid", "NFCA id: " + bytesToHex(tag.getId()));
+                    //Logger.d("NFCA id: " + bytesToHex(tag.getId()));
                     mycardType = "Mifare1K"; //Lets say it is Mifare1k...
                 }
             }
@@ -113,6 +117,7 @@ class AndroidTag {
     public static String getCurrentCardType() throws Exception
     {
         synchronized (lock) {
+            Logger.d(mycardType);
             return mycardType;
         }
     }
@@ -120,8 +125,10 @@ class AndroidTag {
     public static byte[] getUID() throws Exception
     {
         synchronized (lock) {
-            if (myTag != null)
+            if (myTag != null) {
+                //Logger.d("Card UID: %s", bytesToHex(myTag.getId()));
                 return myTag.getId();
+            }
             return null;
         }
     }
@@ -136,14 +143,17 @@ class AndroidTag {
                     if (!mIsoDep.isConnected()) {
                         mIsoDep.setTimeout(1000);
                         mIsoDep.connect();
+                        Logger.d("ISODep connect");
                     }
                 } else if (mNfcA != null) {
                     if (!mNfcA.isConnected()) {
                         mNfcA.setTimeout(1000);
                         mNfcA.connect();
+                        Logger.d("NFCA connect");
                     }
                 }
             } catch (IOException e) {
+                Logger.e(e, "Connection failed");
                 removeCard();
                 return false;
             }
@@ -159,11 +169,14 @@ class AndroidTag {
             try {
                 if (mIsoDep != null) {
                     mIsoDep.close();
+                    //Logger.d("ISODep disconnect");
                 } else if (mNfcA != null) {
                     mNfcA.close();
+                    //Logger.d("NFCA disconnect");
                 }
                 removeCard();
             } catch (IOException e) {
+                Logger.e(e, "Connection failed");
                 removeCard();
                 throw e;
             }
@@ -175,13 +188,18 @@ class AndroidTag {
             if (myTag == null)
                 return null;
             try {
+                byte[] ret = null;
                 if (mIsoDep != null) {
-                    return mIsoDep.transceive(cmd);
+                    //Logger.d("ISODep transceive %s", bytesToHex(cmd));
+                    ret = mIsoDep.transceive(cmd);
                 } else if (mNfcA != null) {
-                    return mNfcA.transceive(cmd);
+                    //Logger.d("NFCA transceive %s", bytesToHex(cmd));
+                    ret = mNfcA.transceive(cmd);
                 }
-                return null;
+                //Logger.d("recieved %s", bytesToHex(cmd));
+                return ret;
             } catch (IOException e) {
+                Logger.e(e, "Connection failed");
                 removeCard();
                 throw e;
             }
