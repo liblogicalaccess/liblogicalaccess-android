@@ -102,7 +102,7 @@ class AndroidTag {
 
             mycardType = getTagInfo(tag);
 
-            if (mycardType == "") {
+            if (mycardType.equals("")) {
                 if (mIsoDep != null) {
                     //Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
                     mycardType = "DESFire"; //lets say it is desfire...
