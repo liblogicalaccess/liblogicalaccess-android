@@ -20,6 +20,7 @@ import java.io.IOException;
 /**
  * Created by Adrien on 23/01/14.
  */
+@SuppressWarnings("HardCodedStringLiteral")
 class AndroidTag {
 
     private static NfcA mNfcA = null;

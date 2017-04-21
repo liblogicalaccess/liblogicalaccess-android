@@ -22,6 +22,6 @@ public class NDKHelper {
         {
             return ai.nativeLibraryDir;
         }
-        return "/system/lib/";
+        return "/system/lib/"; //NON-NLS
     }
 }
