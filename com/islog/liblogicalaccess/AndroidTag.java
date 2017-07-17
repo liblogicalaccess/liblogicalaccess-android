@@ -11,7 +11,6 @@ import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.util.Log;
 
-import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayOutputStream;
@@ -105,13 +104,15 @@ class AndroidTag {
 
             if (mycardType.equals("")) {
                 if (mIsoDep != null) {
-                    //Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
+                    Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
                     mycardType = "DESFire"; //lets say it is desfire...
                 } else if (mNfcA != null) {
-                    //Logger.d("NFCA id: " + bytesToHex(tag.getId()));
+                    Logger.d("NFCA id: " + bytesToHex(tag.getId()));
                     mycardType = "Mifare1K"; //Lets say it is Mifare1k...
                 }
             }
+
+            Logger.d("setCurrentCard: " + mycardType);
         }
     }
 
@@ -127,7 +128,7 @@ class AndroidTag {
     {
         synchronized (lock) {
             if (myTag != null) {
-                //Logger.d("Card UID: %s", bytesToHex(myTag.getId()));
+                Logger.d("Card UID: %s", bytesToHex(myTag.getId()));
                 return myTag.getId();
             }
             return null;
@@ -170,10 +171,10 @@ class AndroidTag {
             try {
                 if (mIsoDep != null) {
                     mIsoDep.close();
-                    //Logger.d("ISODep disconnect");
+                    Logger.d("ISODep disconnect");
                 } else if (mNfcA != null) {
                     mNfcA.close();
-                    //Logger.d("NFCA disconnect");
+                    Logger.d("NFCA disconnect");
                 }
                 removeCard();
             } catch (IOException e) {

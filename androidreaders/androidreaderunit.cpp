@@ -141,9 +141,15 @@ namespace logicalaccess
 			{
 				struct logicalaccess::DESFireCommands::DESFireCardVersion dataVersion;
 				connect(); // have to for android :'(
-				std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)->getVersion(dataVersion);
-				if (dataVersion.hardwareMjVersion >= 1)
-					return createChip("DESFireEV1");
+				try {
+					std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)->getVersion(dataVersion);
+					if (dataVersion.hardwareMjVersion >= 1)
+						return createChip("DESFireEV1");
+				}
+				catch (std::exception& e) {
+                    // Ignore
+				}
+                disconnect();
 			}
 		}
 		return chip;
