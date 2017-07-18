@@ -62,7 +62,7 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
     {
         if (android.os.Build.VERSION.SDK_INT >= 16) {
             Logger.d("Start NFC settings"); //NON-NLS
-            mInstance.startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
+            mInstance.startActivityForResult(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS), 1);
         }
     }
 
