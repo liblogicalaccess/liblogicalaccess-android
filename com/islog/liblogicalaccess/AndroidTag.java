@@ -87,7 +87,7 @@ class AndroidTag {
                 NdefFormatable ndefFormatableTag = NdefFormatable.get(tag);
             }*/
 
-            Logger.d(info);
+            Logger.d("TechDetected: " + aTechList + " -> guess type: " + info);
         }
         return info;
     }

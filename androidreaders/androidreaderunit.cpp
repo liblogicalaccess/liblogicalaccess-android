@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
 
 #include "logicalaccess/myexception.hpp"
 #include "logicalaccess/services/accesscontrol/cardsformatcomposite.hpp"
@@ -19,7 +20,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <logicalaccess/logs.hpp>
 #include "logicalaccess/cards/commands.hpp"
-#include <chrono>
 #include <thread>
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
 #include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/desfireiso7816resultchecker.hpp"
@@ -149,7 +149,6 @@ namespace logicalaccess
 				catch (std::exception& e) {
                     // Ignore
 				}
-                disconnect();
 			}
 		}
 		return chip;
