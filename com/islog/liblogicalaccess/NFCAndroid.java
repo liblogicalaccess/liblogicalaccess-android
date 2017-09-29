@@ -17,7 +17,7 @@ import com.orhanobut.logger.Logger;
  */
 public class NFCAndroid implements NfcAdapter.ReaderCallback {
 
-    private static Activity mInstance = null;
+    private Activity mInstance = null;
     private static NFCEvent mNfcEvent = null;
 
     public NFCAndroid(Activity context, NFCEvent nfcEvent) {
@@ -58,15 +58,12 @@ public class NFCAndroid implements NfcAdapter.ReaderCallback {
             mNfcEvent.onTagDiscovered(tag);
     }
 
-    public static synchronized void openSettingWindow()
-    {
-        if (android.os.Build.VERSION.SDK_INT >= 16) {
-            Logger.d("Start NFC settings"); //NON-NLS
-            mInstance.startActivityForResult(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS), 1);
-        }
+    public synchronized void openSettingWindow() {
+        Logger.d("Start NFC settings"); //NON-NLS
+        mInstance.startActivityForResult(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS), 1);
     }
 
-    public static synchronized boolean checkNFCEnabled()
+    public synchronized boolean checkNFCEnabled()
     {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(mInstance);
 

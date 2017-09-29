@@ -8,20 +8,22 @@ import android.content.pm.ApplicationInfo;
  */
 
 public class NDKHelper {
-    private static Context mContext;
 
-    public static void setContext(Context context) {
-        mContext = context;
-    }
+    private static String NativeLibraryDirectory;
 
-    public static String getNativeLibraryDirectory() {
-        ApplicationInfo ai = mContext.getApplicationInfo();
+    public static void cacheNativeLibraryDirectory(Context context) {
+        ApplicationInfo ai = context.getApplicationInfo();
 
         if ((ai.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
                 || (ai.flags & ApplicationInfo.FLAG_SYSTEM) == 0)
         {
-            return ai.nativeLibraryDir;
+            NativeLibraryDirectory = ai.nativeLibraryDir;
         }
-        return "/system/lib/"; //NON-NLS
+        else
+            NativeLibraryDirectory = "/system/lib/"; //NON-NLS
+    }
+
+    public static String getNativeLibraryDirectory() {
+        return NativeLibraryDirectory;
     }
 }
