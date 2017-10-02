@@ -17,10 +17,11 @@ namespace logicalaccess
         jclass jNDKhelper = (jclass) env->NewGlobalRef(cls);
         jmethodID execCommand = env->GetStaticMethodID(jNDKhelper, "execCommand", "([B)[B");
         jbyteArray resultDataArray = (jbyteArray) env->CallStaticObjectMethod(jNDKhelper, execCommand, array);
-        env->DeleteLocalRef(cls);
-        env->DeleteLocalRef(array);
 
         JniHelper::CheckException(env);
+
+        env->DeleteLocalRef(cls);
+        env->DeleteLocalRef(array);
 
         if (resultDataArray)
         {
@@ -28,7 +29,7 @@ namespace logicalaccess
 
             if (resultSize > 0)
             {
-                jboolean t = false;
+                jboolean t = JNI_FALSE;
                 jbyte *jresult = env->GetByteArrayElements(resultDataArray, &t);
                 result.assign(jresult, jresult + resultSize);
                 env->ReleaseByteArrayElements(resultDataArray, jresult, JNI_ABORT);
@@ -38,7 +39,7 @@ namespace logicalaccess
         m_result = result;
     }
 
-    std::vector<unsigned char> AndroidDataTransport::receive(long int timeout)
+    std::vector<unsigned char> AndroidDataTransport::receive(long int /*timeout*/)
     {
         return m_result;
     }

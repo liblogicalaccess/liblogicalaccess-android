@@ -97,7 +97,7 @@ namespace logicalaccess
 
 				if (resultSize > 0)
 				{
-					jboolean t = false;
+					jboolean t = JNI_FALSE;
 					jbyte *jresult = env->GetByteArrayElements(resultDataArray, &t);
 					result.assign(jresult, jresult + resultSize);
 					env->ReleaseByteArrayElements(resultDataArray, jresult, JNI_ABORT);
@@ -156,7 +156,7 @@ namespace logicalaccess
 
 	bool AndroidReaderUnit::waitInsertion(unsigned int maxwait)
 	{
-		bool inserted = false;
+		bool inserted;
 		std::string cardType = "";
 		std::chrono::steady_clock::time_point const clock_timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(maxwait);
 		do
@@ -187,7 +187,7 @@ namespace logicalaccess
 		return inserted;
 	}
 
-	bool AndroidReaderUnit::waitRemoval(unsigned int maxwait)
+	bool AndroidReaderUnit::waitRemoval(unsigned int /*maxwait*/)
 	{
 		jclass cls = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
 		jclass jNDKhelper = (jclass) m_env->NewGlobalRef(cls);

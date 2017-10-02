@@ -1,6 +1,6 @@
 #include "jnihelper.h"
 #include <stdexcept>
-#include <jni.h>
+#include <cassert>
 
 namespace logicalaccess {
 
@@ -12,18 +12,22 @@ namespace logicalaccess {
 
 	}
 
+
 	void JniHelper::CheckException(JNIEnv *env) {
 		if (env->ExceptionCheck()) {
-			jthrowable e = env->ExceptionOccurred();
-			env->ExceptionClear();
+            jthrowable e = env->ExceptionOccurred();
+            env->ExceptionClear();
+            assert(!env->ExceptionCheck());
 
-			jmethodID toString = env->GetMethodID(env->FindClass("java/lang/Object"), "toString",
-												  "()Ljava/lang/String;");
-			jstring estring = (jstring) env->CallObjectMethod(e, toString);
+            jmethodID toString = env->GetMethodID(env->FindClass("java/lang/Object"), "toString",
+                                                  "()Ljava/lang/String;");
+            jstring estring = (jstring) env->CallObjectMethod(e, toString);
 
-			jboolean isCopy;
-			const char *message = env->GetStringUTFChars(estring, &isCopy);
-			throw std::runtime_error(message);
-		}
+            const char *message = env->GetStringUTFChars(estring, NULL);
+            std::string error = std::string(message);
+            env->ReleaseStringUTFChars(estring, message);
+
+            throw std::runtime_error(error);
+        }
 	}
 }

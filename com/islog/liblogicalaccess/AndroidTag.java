@@ -135,7 +135,7 @@ class AndroidTag {
         }
     }
 
-    public static boolean connect()
+    public static boolean connect() throws Exception
     {
         synchronized (lock) {
             if (myTag == null)
@@ -157,7 +157,7 @@ class AndroidTag {
             } catch (IOException e) {
                 Logger.e(e, "Connection failed");
                 removeCard();
-                return false;
+                throw e;
             }
             return true;
         }

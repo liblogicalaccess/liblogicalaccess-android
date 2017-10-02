@@ -4,6 +4,8 @@ project(androidreaders)
 
 add_definitions(-DUNIX)
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
+
 file(GLOB SRCS *.cpp)
 file(GLOB include *.hpp)
 
@@ -16,6 +18,8 @@ SOURCE_GROUP("Source Files\\readercardadapters" FILES ${source_readercardadapter
 set(INCLUDE_LIB ${include} ${include_readercardadapters})
 set(SOURCE_LIB ${SRCS} ${source_readercardadapters})
 
+find_library(log-lib log)
+
 add_library(
 	androidreaders
 	SHARED
@@ -26,6 +30,7 @@ add_library(
   
 target_link_libraries(
 	androidreaders
+	${log-lib}
 	logicalaccess-cryptolib
 	iso7816readers
 	desfirecards

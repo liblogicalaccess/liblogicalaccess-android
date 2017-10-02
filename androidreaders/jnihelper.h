@@ -2,6 +2,8 @@
 #define JNIHELPER_H
 
 #include <jni.h>
+#include <string>
+
 namespace logicalaccess {
     class JniHelper {
     public:
