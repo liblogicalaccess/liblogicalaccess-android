@@ -1,26 +1,21 @@
 package com.islog.liblogicalaccess;
 
 
-import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
-import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
  * Created by Adrien on 23/01/14.
  */
 @SuppressWarnings("HardCodedStringLiteral")
-class AndroidTag {
+public class AndroidTag {
 
     private static NfcA mNfcA = null;
     private static IsoDep mIsoDep = null;
@@ -92,7 +87,7 @@ class AndroidTag {
         return info;
     }
 
-    static void setCurrentCard(Tag tag)
+    public static void setCurrentCard(Tag tag)
     {
         synchronized (lock) {
             myTag = tag;
