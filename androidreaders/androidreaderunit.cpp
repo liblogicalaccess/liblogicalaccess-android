@@ -139,15 +139,26 @@ namespace logicalaccess
 
 			if (type == "DESFire")
 			{
-				struct logicalaccess::DESFireCommands::DESFireCardVersion dataVersion;
-				connect(); // have to for android :'(
-				try {
-					std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)->getVersion(dataVersion);
-					if (dataVersion.hardwareMjVersion >= 1)
-						return createChip("DESFireEV1");
-				}
-				catch (std::exception& e) {
-                    // Ignore
+				for (int i = 0 ; i < 5; ++i) {
+					struct logicalaccess::DESFireCommands::DESFireCardVersion dataVersion;
+					connect(); // have to for android :'(
+					try {
+
+                        // Hack smartMX. Required otherwise we receive
+                        // WRONG CLASS from the card.
+                        // We aren't sure why this is needed.
+                        std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(
+                                commands)->selectApplication(0);
+
+						std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(
+								commands)->getVersion(dataVersion);
+						if (dataVersion.hardwareMjVersion >= 1) {
+							return createChip("DESFireEV1");
+						}
+					}
+					catch (std::exception &e) {
+						// Ignore
+					}
 				}
 			}
 		}
