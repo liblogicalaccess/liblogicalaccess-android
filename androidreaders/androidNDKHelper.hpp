@@ -5,12 +5,14 @@
 
 namespace logicalaccess
 {
-    class AndroidNDKHelper
+class AndroidNDKHelper
+{
+  public:
+    AndroidNDKHelper()
     {
-    public:
-        AndroidNDKHelper() {}
-	    void Init(JNIEnv *env);
-    };
+    }
+    void Init(JNIEnv *env);
+};
 }
 
 #endif /* LOGICALCCESS_ANDROIDNDKHELPER */
