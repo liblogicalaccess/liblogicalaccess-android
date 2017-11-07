@@ -139,7 +139,6 @@ namespace logicalaccess
 
 			if (type == "DESFire")
 			{
-				for (int i = 0 ; i < 5; ++i) {
 					struct logicalaccess::DESFireCommands::DESFireCardVersion dataVersion;
 					connect(); // have to for android :'(
 					try {
@@ -159,7 +158,6 @@ namespace logicalaccess
 					catch (std::exception &e) {
 						// Ignore
 					}
-				}
 			}
 		}
 		return chip;
