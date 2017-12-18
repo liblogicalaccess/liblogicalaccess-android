@@ -27,6 +27,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <logicalaccess/logs.hpp>
 #include <thread>
+#include <android/log.h>
 
 namespace logicalaccess
 {
@@ -164,6 +165,7 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
             }
             catch (std::exception &e)
             {
+                __android_log_print(ANDROID_LOG_ERROR, "RFIDGUARD", "%s", e.what());
                 // Ignore
             }
         }
