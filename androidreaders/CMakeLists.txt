@@ -12,11 +12,17 @@ file(GLOB include *.hpp)
 file(GLOB include_readercardadapters ${CMAKE_CURRENT_SOURCE_DIR}/readercardadapters/*.hpp)
 SOURCE_GROUP("Header Files\\readercardadapters" FILES ${include_readercardadapters})
 
+file(GLOB include_commands ${CMAKE_CURRENT_SOURCE_DIR}/commands/*.hpp)
+SOURCE_GROUP("Header Files\\commands" FILES ${include_commands})
+
 file(GLOB source_readercardadapters ${CMAKE_CURRENT_SOURCE_DIR}/readercardadapters/*.cpp)
 SOURCE_GROUP("Source Files\\readercardadapters" FILES ${source_readercardadapters})
 
-set(INCLUDE_LIB ${include} ${include_readercardadapters})
-set(SOURCE_LIB ${SRCS} ${source_readercardadapters})
+file(GLOB source_commands ${CMAKE_CURRENT_SOURCE_DIR}/commands/*.cpp)
+SOURCE_GROUP("Source Files\\commands" FILES ${source_commands})
+
+set(INCLUDE_LIB ${include} ${include_readercardadapters} ${include_commands})
+set(SOURCE_LIB ${SRCS} ${source_readercardadapters} ${source_commands})
 
 find_library(log-lib log)
 
@@ -34,6 +40,7 @@ target_link_libraries(
 	logicalaccess-cryptolib
 	iso7816readers
 	desfirecards
+	mifarecards
 	iso7816cards
 	${LIBLOGICALACCESS_LIBRARY}
 	${OPENSSL_LIBRARIES}

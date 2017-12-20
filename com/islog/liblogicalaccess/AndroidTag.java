@@ -18,9 +18,10 @@ import java.io.IOException;
 public class AndroidTag {
 
     private static NfcA mNfcA = null;
+    private static MifareClassic mMifareClassic = null;
     private static IsoDep mIsoDep = null;
     private static Tag myTag = null;
-    private static String mycardType = "";
+    private static String myCardType = "";
     private static final Object lock = new Object();
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -49,7 +50,16 @@ public class AndroidTag {
                 // Type Info
                 switch (mifareClassicTag.getType()) {
                     case MifareClassic.TYPE_CLASSIC:
-                        type = "Mifare1K";
+                        switch (mifareClassicTag.getSize()) {
+                            case MifareClassic.SIZE_MINI:
+                            case MifareClassic.SIZE_1K:
+                            case MifareClassic.SIZE_2K:
+                                type = "Mifare1K";
+                                break;
+                            case MifareClassic.SIZE_4K:
+                                type = "Mifare4K";
+                                break;
+                        }
                         break;
                     case MifareClassic.TYPE_PLUS:
                         type = "MifarePlus2K";
@@ -58,7 +68,7 @@ public class AndroidTag {
                         type = "Pro";
                         break;*/
                 }
-
+                info = type;
             } else if (aTechList.equals(MifareUltralight.class.getName())) {
                 MifareUltralight mifareUlTag = MifareUltralight.get(tag);
 
@@ -71,7 +81,7 @@ public class AndroidTag {
                         type = "MifareUltralightC";
                         break;
                 }
-                info = "Mifare " + type + "\n";
+                info = type;
             } else if (aTechList.equals(IsoDep.class.getName())) {
                 info = "DESFire"; //We guess it...
             }/* else if(techList[i].equals(Ndef.class.getName())) {
@@ -94,28 +104,32 @@ public class AndroidTag {
 
             mIsoDep = IsoDep.get(tag);
             mNfcA = NfcA.get(tag);
+            mMifareClassic = MifareClassic.get(tag);
 
-            mycardType = getTagInfo(tag);
+            myCardType = getTagInfo(tag);
 
-            if (mycardType.equals("")) {
+            if (myCardType.equals("")) {
                 if (mIsoDep != null) {
                     Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
-                    mycardType = "DESFire"; //lets say it is desfire...
+                    myCardType = "DESFire"; //lets say it is desfire...
+                } else if (mMifareClassic != null) {
+                    Logger.d("Mifare id: " + bytesToHex(tag.getId()));
+                    myCardType = "Mifare1K"; //Lets say it is 1K...
                 } else if (mNfcA != null) {
                     Logger.d("NFCA id: " + bytesToHex(tag.getId()));
-                    mycardType = "Mifare1K"; //Lets say it is Mifare1k...
+                    myCardType = "Mifare1K"; //Lets say it is Mifare1k...
                 }
             }
 
-            Logger.d("setCurrentCard: " + mycardType);
+            Logger.d("setCurrentCard: " + myCardType);
         }
     }
 
     public static String getCurrentCardType() throws Exception
     {
         synchronized (lock) {
-            Logger.d(mycardType);
-            return mycardType;
+            Logger.d(myCardType);
+            return myCardType;
         }
     }
 
@@ -142,6 +156,12 @@ public class AndroidTag {
                         mIsoDep.connect();
                         Logger.d("ISODep connect");
                     }
+                } else if (mMifareClassic != null) {
+                    if (!mMifareClassic.isConnected()) {
+                        mMifareClassic.setTimeout(1000);
+                        mMifareClassic.connect();
+                        Logger.d("Mifare connect");
+                    }
                 } else if (mNfcA != null) {
                     if (!mNfcA.isConnected()) {
                         mNfcA.setTimeout(1000);
@@ -167,13 +187,16 @@ public class AndroidTag {
                 if (mIsoDep != null) {
                     mIsoDep.close();
                     Logger.d("ISODep disconnect");
+                } else if (mMifareClassic != null) {
+                    mMifareClassic.close();
+                    Logger.d("Mifare disconnect");
                 } else if (mNfcA != null) {
                     mNfcA.close();
                     Logger.d("NFCA disconnect");
                 }
                 removeCard();
             } catch (IOException e) {
-                Logger.e(e, "Connection failed");
+                Logger.e(e, "Disconnect failed");
                 removeCard();
                 throw e;
             }
@@ -196,7 +219,33 @@ public class AndroidTag {
                 //Logger.d("recieved %s", bytesToHex(cmd));
                 return ret;
             } catch (IOException e) {
-                Logger.e(e, "Connection failed");
+                Logger.e(e, "ExecCommand failed");
+                removeCard();
+                throw e;
+            }
+        }
+    }
+
+    public static byte[] mifareReadBlock(int sector, int block, byte[] key) throws Exception {
+        synchronized (lock) {
+            if (myTag == null)
+                return null;
+            try {
+                byte[] ret = null;
+
+                if (mMifareClassic == null) {
+                    throw new Exception("The device does not support reading Mifare.");
+                }
+
+                if (!mMifareClassic.authenticateSectorWithKeyA(sector, key))
+                    throw new Exception("Authentication failed to sector " + sector);
+
+                ret = mMifareClassic.readBlock(mMifareClassic.getBlockCountInSector(sector) + block);
+
+                Logger.d("recieved %s", bytesToHex(ret));
+                return ret;
+            } catch (Exception e) {
+                Logger.e(e, "MifareReadBlock failed");
                 removeCard();
                 throw e;
             }
@@ -206,9 +255,10 @@ public class AndroidTag {
     public static void removeCard()
     {
         mNfcA = null;
+        mMifareClassic = null;
         mIsoDep = null;
         myTag = null;
-        mycardType = "";
+        myCardType = "";
     }
 }
 

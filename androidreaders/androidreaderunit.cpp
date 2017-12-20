@@ -23,6 +23,7 @@
 #include "logicalaccess/cards/commands.hpp"
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
 #include "readercardadapters/androiddatatransport.hpp"
+#include "commands/MifareAndroidCommands.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <logicalaccess/logs.hpp>
@@ -127,6 +128,9 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
                     "setCryptoContextDESFireEV1ISO7816Commands",
                     LibraryManager::READERS_TYPE);
             setcryptocontextfct(&commands, &chip);
+        }
+        else if (type == "Mifare1K" || type == "Mifare4K") {
+            commands = std::make_shared<MifareAndroidCommands>();
         }
         else if (type == "NFCA")
         {
