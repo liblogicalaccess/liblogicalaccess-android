@@ -240,7 +240,9 @@ public class AndroidTag {
                 if (!mMifareClassic.authenticateSectorWithKeyA(sector, key))
                     throw new Exception("Authentication failed to sector " + sector);
 
-                ret = mMifareClassic.readBlock(mMifareClassic.getBlockCountInSector(sector) + block);
+                int blockTorRead = mMifareClassic.sectorToBlock(sector) + block;
+
+                ret = mMifareClassic.readBlock(blockTorRead);
 
                 Logger.d("recieved %s", bytesToHex(ret));
                 return ret;
