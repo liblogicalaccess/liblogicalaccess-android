@@ -1,34 +1,30 @@
-/**
- * \file androidreaderprovider.hpp
- * \author Adrien J. <adrien-dev@islog.com>
- * \brief Android card reader provider.
- */
+//
+// Created by xaqq on 3/9/18.
+//
 
-#ifndef LOGICALACCESS_ANDROIDREADERPROVIDER_HPP
-#define LOGICALACCESS_ANDROIDREADERPROVIDER_HPP
+#pragma once
 
-#include "androidreaderunit.hpp"
+#include <memory>
 #include "logicalaccess/readerproviders/readerprovider.hpp"
 
 namespace logicalaccess
 {
-#define READER_ANDROID "Android"
+#define READER_MORPHO_SAM "MORPHO_SAM"
 
 /**
- * \brief Android Reader Provider class.
+ * \brief MorphoSAMReaderProvider Reader Provider class.
+ *
+ * This is for the SAM slot on Morpho/Safran/Sagem tablet.
  */
-class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
+class LIBLOGICALACCESS_API MorphoSAMReaderProvider : public ReaderProvider
 {
   public:
-    /**
-     * \brief Get the AndroidReaderProvider instance.
-     */
-    static std::shared_ptr<AndroidReaderProvider> getSingletonInstance();
+    static std::shared_ptr<MorphoSAMReaderProvider> getSingletonInstance();
 
     /**
      * \brief Destructor.
      */
-    ~AndroidReaderProvider();
+    ~MorphoSAMReaderProvider() = default;
 
     /**
      * \brief Release the provider resources.
@@ -41,7 +37,7 @@ class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
      */
     virtual std::string getRPType() const
     {
-        return READER_ANDROID;
+        return READER_MORPHO_SAM;
     };
 
     /**
@@ -50,7 +46,7 @@ class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
      */
     virtual std::string getRPName() const
     {
-        return READER_ANDROID;
+        return READER_MORPHO_SAM;
     };
 
     /**
@@ -78,7 +74,7 @@ class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
     /**
      * \brief Constructor.
      */
-    AndroidReaderProvider();
+    MorphoSAMReaderProvider();
 
     /**
      * \brief The reader list.
@@ -87,4 +83,3 @@ class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
 };
 }
 
-#endif /* LOGICALACCESS_ANDROIDREADERPROVIDER_HPP */
