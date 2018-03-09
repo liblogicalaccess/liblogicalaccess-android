@@ -19,7 +19,7 @@ namespace logicalaccess
 
     std::shared_ptr<MorphoSAMReaderProvider> MorphoSAMReaderProvider::getSingletonInstance()
     {
-        LOG(LogLevel::INFOS) << "Getting singleton instance...";
+        LOG(LogLevel::INFOS) << "Getting MorphoSAMReaderProvider singleton instance...";
         static std::shared_ptr<MorphoSAMReaderProvider> instance;
         if (!instance)
         {
@@ -32,7 +32,7 @@ namespace logicalaccess
 
     std::shared_ptr<ReaderUnit> MorphoSAMReaderProvider::createReaderUnit()
     {
-        LOG(LogLevel::INFOS) << "Creating new reader unit with empty port...";
+        LOG(LogLevel::INFOS) << "Creating new MorphoSAMReaderUnit ...";
 
         return std::make_shared<MorphoSAMReaderUnit>();
     }

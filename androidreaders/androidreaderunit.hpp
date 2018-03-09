@@ -146,7 +146,6 @@ class LIBLOGICALACCESS_API AndroidReaderUnit : public ReaderUnit
         return m_env;
     };
 
-  protected:
   private:
     static JNIEnv *m_env;
 };
