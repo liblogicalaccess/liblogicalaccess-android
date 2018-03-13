@@ -130,9 +130,10 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
                     LibraryManager::READERS_TYPE);
             setcryptocontextfct(&commands, &chip);
             std::dynamic_pointer_cast<DESFireISO7816Commands>(commands)->setSAMChip(
-                    getSAMChip());
+                getSAMChip());
         }
-        else if (type == "Mifare1K" || type == "Mifare4K") {
+        else if (type == "Mifare1K" || type == "Mifare4K")
+        {
             commands = std::make_shared<MifareAndroidCommands>();
         }
         else if (type == "NFCA")

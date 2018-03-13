@@ -5,48 +5,57 @@
 #include "morphosamreaderprovider.hpp"
 #include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/iso7816readerunit.hpp"
 
-namespace logicalaccess {
-    class MorphoSAMReaderUnit : public ISO7816ReaderUnit {
-    public:
-        MorphoSAMReaderUnit();
+namespace logicalaccess
+{
+/**
+ * A ReaderUnit that is designed for use on a MorphoTablet when
+ * we want to interact with the SAM reader on the device.
+ *
+ * This MorphoSAMReaderUnit is tightly coupled to the RFIDGuard infrastructure
+ * and Android as it relies on the global AndroidSupportContext being available.
+ */
+class MorphoSAMReaderUnit : public ISO7816ReaderUnit
+{
+  public:
+    MorphoSAMReaderUnit();
 
-        std::shared_ptr<Chip> createChip(std::string type) override;
+    std::shared_ptr<Chip> createChip(std::string type) override;
 
-        bool waitInsertion(unsigned int maxwait) override;
+    bool waitInsertion(unsigned int maxwait) override;
 
-        bool waitRemoval(unsigned int maxwait) override;
+    bool waitRemoval(unsigned int maxwait) override;
 
-        bool isConnected() override;
+    bool isConnected() override;
 
-        void setCardType(std::string cardType) override;
+    void setCardType(std::string cardType) override;
 
-        std::shared_ptr<Chip> getSingleChip() override;
+    std::shared_ptr<Chip> getSingleChip() override;
 
-        std::vector<std::shared_ptr<Chip>> getChipList() override;
+    std::vector<std::shared_ptr<Chip>> getChipList() override;
 
-        bool connect() override;
+    bool connect() override;
 
-        void disconnect() override;
+    void disconnect() override;
 
-        bool connectToReader() override;
+    bool connectToReader() override;
 
-        void disconnectFromReader() override;
+    void disconnectFromReader() override;
 
-        std::string getName() const override;
+    std::string getName() const override;
 
-        std::string getReaderSerialNumber() override;
+    std::string getReaderSerialNumber() override;
 
-        void setEnv(JNIEnv *env)
-        {
-            m_env = env;
-        };
-
-        static JNIEnv *getEnv()
-        {
-            return m_env;
-        };
-
-    private:
-        static JNIEnv *m_env;
+    void setEnv(JNIEnv *env)
+    {
+        m_env = env;
     };
+
+    static JNIEnv *getEnv()
+    {
+        return m_env;
+    };
+
+  private:
+    static JNIEnv *m_env;
+};
 }

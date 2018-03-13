@@ -14,11 +14,12 @@
 
 namespace logicalaccess
 {
-    class LIBLOGICALACCESS_API MifareAndroidCommands : public Commands
-    {
-    public:
-        std::vector<unsigned char> readBlock(int sector, int block, std::vector<unsigned char> keyA);
-    };
+class LIBLOGICALACCESS_API MifareAndroidCommands : public Commands
+{
+  public:
+    std::vector<unsigned char> readBlock(int sector, int block,
+                                         std::vector<unsigned char> keyA);
+};
 }
 
 #endif /* MIFAREANDROIDCOMMANDS_HPP */

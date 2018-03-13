@@ -82,4 +82,3 @@ class LIBLOGICALACCESS_API MorphoSAMReaderProvider : public ReaderProvider
     ReaderList d_readers;
 };
 }
-

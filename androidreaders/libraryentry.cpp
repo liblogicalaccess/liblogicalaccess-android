@@ -53,12 +53,12 @@ LIBLOGICALACCESS_API bool getReaderInfoAt(unsigned int index, char *readername,
             sprintf(readername, READER_ANDROID);
             ret = true;
         }
-            case 1:
-            {
-                *getterfct = (void *)&getMORPHO_SAMReader;
-                sprintf(readername, READER_MORPHO_SAM);
-                ret = true;
-            }
+        case 1:
+        {
+            *getterfct = (void *)&getMORPHO_SAMReader;
+            sprintf(readername, READER_MORPHO_SAM);
+            ret = true;
+        }
         break;
         }
     }
