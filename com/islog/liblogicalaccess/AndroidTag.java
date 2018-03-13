@@ -7,6 +7,7 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.NfcA;
 
+import com.islog.rfidguard.Utils;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
@@ -23,17 +24,6 @@ public class AndroidTag {
     private static Tag myTag = null;
     private static String myCardType = "";
     private static final Object lock = new Object();
-
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    private static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
 
     private static String getTagInfo(Tag tag) {
         String info = "";
@@ -110,13 +100,13 @@ public class AndroidTag {
 
             if (myCardType.equals("")) {
                 if (mIsoDep != null) {
-                    Logger.d("ISODEP id: " + bytesToHex(tag.getId()));
+                    Logger.d("ISODEP id: " + Utils.bytesToHex(tag.getId()));
                     myCardType = "DESFire"; //lets say it is desfire...
                 } else if (mMifareClassic != null) {
-                    Logger.d("Mifare id: " + bytesToHex(tag.getId()));
+                    Logger.d("Mifare id: " + Utils.bytesToHex(tag.getId()));
                     myCardType = "Mifare1K"; //Lets say it is 1K...
                 } else if (mNfcA != null) {
-                    Logger.d("NFCA id: " + bytesToHex(tag.getId()));
+                    Logger.d("NFCA id: " + Utils.bytesToHex(tag.getId()));
                     myCardType = "Mifare1K"; //Lets say it is Mifare1k...
                 }
             }
@@ -137,7 +127,7 @@ public class AndroidTag {
     {
         synchronized (lock) {
             if (myTag != null) {
-                Logger.d("Card UID: %s", bytesToHex(myTag.getId()));
+                Logger.d("Card UID: %s", Utils.bytesToHex(myTag.getId()));
                 return myTag.getId();
             }
             return null;
@@ -244,7 +234,7 @@ public class AndroidTag {
 
                 ret = mMifareClassic.readBlock(blockTorRead);
 
-                Logger.d("recieved %s", bytesToHex(ret));
+                Logger.d("recieved %s", Utils.bytesToHex(ret));
                 return ret;
             } catch (Exception e) {
                 Logger.e(e, "MifareReadBlock failed");

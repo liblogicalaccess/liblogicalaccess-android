@@ -24,6 +24,7 @@
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
 #include "readercardadapters/androiddatatransport.hpp"
 #include "commands/MifareAndroidCommands.hpp"
+#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/desfireiso7816commands.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <logicalaccess/logs.hpp>
@@ -35,7 +36,7 @@ namespace logicalaccess
 JNIEnv *AndroidReaderUnit::m_env;
 
 AndroidReaderUnit::AndroidReaderUnit()
-    : ReaderUnit(READER_ANDROID)
+    : ISO7816ReaderUnit(READER_ANDROID)
 {
     d_readerUnitConfig.reset(new AndroidReaderUnitConfiguration());
 
@@ -128,6 +129,8 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
                     "setCryptoContextDESFireEV1ISO7816Commands",
                     LibraryManager::READERS_TYPE);
             setcryptocontextfct(&commands, &chip);
+            std::dynamic_pointer_cast<DESFireISO7816Commands>(commands)->setSAMChip(
+                    getSAMChip());
         }
         else if (type == "Mifare1K" || type == "Mifare4K") {
             commands = std::make_shared<MifareAndroidCommands>();
@@ -250,7 +253,7 @@ void AndroidReaderUnit::disconnect()
 
 bool AndroidReaderUnit::connectToReader()
 {
-    return true;
+    return ISO7816ReaderUnit::connectToReader();
 }
 
 void AndroidReaderUnit::disconnectFromReader()

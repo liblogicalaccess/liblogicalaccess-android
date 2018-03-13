@@ -3,9 +3,10 @@
 #include <logicalaccess/readerproviders/readerunit.hpp>
 #include <jni.h>
 #include "morphosamreaderprovider.hpp"
+#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/iso7816readerunit.hpp"
 
 namespace logicalaccess {
-    class MorphoSAMReaderUnit : public ReaderUnit {
+    class MorphoSAMReaderUnit : public ISO7816ReaderUnit {
     public:
         MorphoSAMReaderUnit();
 

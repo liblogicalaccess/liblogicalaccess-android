@@ -8,6 +8,7 @@
 #define LOGICALACCESS_ANDROIDREADERUNIT_HPP
 
 #include "logicalaccess/readerproviders/readerunit.hpp"
+#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/iso7816readerunit.hpp"
 #include <jni.h>
 
 namespace logicalaccess
@@ -18,7 +19,7 @@ class AndroidReaderProvider;
 /**
  * \brief The Android reader unit class.
  */
-class LIBLOGICALACCESS_API AndroidReaderUnit : public ReaderUnit
+class LIBLOGICALACCESS_API AndroidReaderUnit : public ISO7816ReaderUnit
 {
   public:
     /**

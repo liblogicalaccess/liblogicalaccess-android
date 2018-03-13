@@ -7,6 +7,8 @@
 #include <logicalaccess/dynlibrary/librarymanager.hpp>
 #include "morphosamreaderunit.hpp"
 #include "readercardadapters/morphosamdatatransport.hpp"
+#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/samav2iso7816commands.hpp"
+#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/samiso7816resultchecker.hpp"
 
 namespace logicalaccess {
 
@@ -31,12 +33,12 @@ namespace logicalaccess {
 
     std::shared_ptr<Chip>
     MorphoSAMReaderUnit::getSingleChip() {
-        return nullptr;
+        return d_insertedChip;
     }
 
     std::vector<std::shared_ptr<Chip>>
     MorphoSAMReaderUnit::getChipList() {
-        return {};
+        return {d_insertedChip};
     }
 
     bool MorphoSAMReaderUnit::connect() {
@@ -56,7 +58,7 @@ namespace logicalaccess {
     }
 
     std::string MorphoSAMReaderUnit::getName() const {
-        return "NO_IMPLEMENTED";
+        return "ADRIEN_SAM_MORPHO_READER";
     }
 
     std::string MorphoSAMReaderUnit::getReaderSerialNumber() {
@@ -64,7 +66,7 @@ namespace logicalaccess {
     }
 
     MorphoSAMReaderUnit::MorphoSAMReaderUnit()
-            : ReaderUnit(READER_MORPHO_SAM) {}
+            : ISO7816ReaderUnit(READER_MORPHO_SAM) {}
 
     std::shared_ptr<Chip> MorphoSAMReaderUnit::createChip(std::string type) {
         if (type != "SAM_AV2")
@@ -73,8 +75,15 @@ namespace logicalaccess {
         }
 
         std::shared_ptr<DataTransport> data_transport = std::make_shared<MorphoSAMDataTransport>();
+
         std::shared_ptr<Commands> commands;
-        commands = LibraryManager::getInstance()->getCommands("SAM_AV2");
+        commands.reset(new SAMAV2ISO7816Commands());
+        std::shared_ptr<SAMDESfireCrypto> samcrypto(new SAMDESfireCrypto());
+        std::dynamic_pointer_cast<SAMAV2ISO7816Commands>(commands)->setCrypto(samcrypto);
+        std::shared_ptr<ReaderCardAdapter> rca =
+            std::make_shared<ISO7816ReaderCardAdapter>();
+        commands->setReaderCardAdapter(rca);
+        commands->getReaderCardAdapter()->setResultChecker(std::make_shared<SAMISO7816ResultChecker>());
         commands->getReaderCardAdapter()->setDataTransport(data_transport);
 
         ChipPtr  chip = ReaderUnit::createChip(type);
