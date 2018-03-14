@@ -1,11 +1,9 @@
 #include "androidreaderunit.hpp"
 #include "androidreaderprovider.hpp"
-
 #include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-
 #include "logicalaccess/myexception.hpp"
 #include "logicalaccess/services/accesscontrol/cardsformatcomposite.hpp"
 #include "logicalaccess/plugins/cards/desfire/desfirecommands.hpp"
@@ -161,7 +159,8 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
                 std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
                     ->selectApplication(0);
 
-                dataVersion = std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
+                dataVersion =
+                    std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
                         ->getVersion();
                 if (dataVersion.hardwareMjVersion >= 1)
                 {
