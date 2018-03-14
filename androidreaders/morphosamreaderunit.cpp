@@ -6,8 +6,8 @@
 #include <logicalaccess/cards/commands.hpp>
 #include <logicalaccess/dynlibrary/librarymanager.hpp>
 #include "morphosamreaderunit.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/samav2iso7816commands.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/samiso7816resultchecker.hpp"
+#include "logicalaccess/plugins/readers/iso7816/commands/samav2iso7816commands.hpp"
+#include "logicalaccess/plugins/readers/iso7816/commands/samiso7816resultchecker.hpp"
 #include "readercardadapters/javabridgedatatransport.hpp"
 #include "androidsupportcontext.hpp"
 

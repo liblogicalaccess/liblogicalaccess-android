@@ -8,7 +8,7 @@
 #define LOGICALACCESS_ANDROIDREADERUNIT_HPP
 
 #include "logicalaccess/readerproviders/readerunit.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/iso7816readerunit.hpp"
+#include "logicalaccess/plugins/readers/iso7816/iso7816readerunit.hpp"
 #include <jni.h>
 
 namespace logicalaccess

@@ -4,6 +4,11 @@
 
 namespace logicalaccess
 {
+
+    MifareAndroidCommands::MifareAndroidCommands() : Commands("MifareAndroid") {
+
+    }
+
 std::vector<unsigned char>
 MifareAndroidCommands::readBlock(int sector, int block, std::vector<unsigned char> keyA)
 {
@@ -41,4 +46,5 @@ MifareAndroidCommands::readBlock(int sector, int block, std::vector<unsigned cha
 
     return result;
 }
+
 }

@@ -1,9 +1,3 @@
-/**
- * \file stidstrreaderunit.cpp
- * \author Maxime C. <maxime-dev@islog.com>
- * \brief STidSTR reader unit.
- */
-
 #include "androidreaderunit.hpp"
 #include "androidreaderprovider.hpp"
 
@@ -14,16 +8,15 @@
 
 #include "logicalaccess/myexception.hpp"
 #include "logicalaccess/services/accesscontrol/cardsformatcomposite.hpp"
-
-#include "../../../liblogicalaccess/plugins/pluginscards/desfire/desfirecommands.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/desfireiso7816resultchecker.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/readercardadapters/iso7816readercardadapter.hpp"
+#include "logicalaccess/plugins/cards/desfire/desfirecommands.hpp"
+#include "logicalaccess/plugins/readers/iso7816/commands/desfireiso7816resultchecker.hpp"
+#include "logicalaccess/plugins/cards/iso7816/readercardadapters/iso7816readercardadapter.hpp"
 #include "androidreaderunitconfiguration.hpp"
 #include "jnihelper.h"
 #include "logicalaccess/cards/commands.hpp"
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
 #include "commands/MifareAndroidCommands.hpp"
-#include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/desfireiso7816commands.hpp"
+#include "logicalaccess/plugins/readers/iso7816/commands/desfireiso7816commands.hpp"
 #include "readercardadapters/javabridgedatatransport.hpp"
 #include "androidsupportcontext.hpp"
 #include <boost/filesystem.hpp>
@@ -168,8 +161,8 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
                 std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
                     ->selectApplication(0);
 
-                std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
-                    ->getVersion(dataVersion);
+                dataVersion = std::dynamic_pointer_cast<logicalaccess::DESFireCommands>(commands)
+                        ->getVersion();
                 if (dataVersion.hardwareMjVersion >= 1)
                 {
                     return createChip("DESFireEV1");
