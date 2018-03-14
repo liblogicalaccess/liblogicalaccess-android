@@ -8,12 +8,17 @@
 namespace logicalaccess
 {
 
-JavaBridgeDataTransport::JavaBridgeDataTransport(jobject data_transport_, JNIEnv *jni_env)
-    : data_transport_(data_transport_)
-    , jni_env_(jni_env)
+JavaBridgeDataTransport::JavaBridgeDataTransport(jobject data_transport, JNIEnv *jni_env)
+    : jni_env_(jni_env)
     , ctor_thread_id_(std::this_thread::get_id())
 {
+    data_transport_ = jni_env->NewGlobalRef(data_transport);
     enforce_correct_data_transport_jobject();
+}
+
+JavaBridgeDataTransport::~JavaBridgeDataTransport()
+{
+    jni_env_->DeleteGlobalRef(data_transport_);
 }
 
 std::string JavaBridgeDataTransport::getTransportType() const

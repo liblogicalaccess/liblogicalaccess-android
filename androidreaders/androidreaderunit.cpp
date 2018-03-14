@@ -22,9 +22,10 @@
 #include "jnihelper.h"
 #include "logicalaccess/cards/commands.hpp"
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
-#include "readercardadapters/androiddatatransport.hpp"
 #include "commands/MifareAndroidCommands.hpp"
 #include "../../../liblogicalaccess/plugins/pluginsreaderproviders/iso7816/commands/desfireiso7816commands.hpp"
+#include "readercardadapters/javabridgedatatransport.hpp"
+#include "androidsupportcontext.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <logicalaccess/logs.hpp>
@@ -40,7 +41,10 @@ AndroidReaderUnit::AndroidReaderUnit()
 {
     d_readerUnitConfig.reset(new AndroidReaderUnitConfiguration());
 
-    setDataTransport(std::make_shared<AndroidDataTransport>());
+    auto java_data_transport = std::make_shared<JavaBridgeDataTransport>(
+        gl_android_support_context->get_android_reader_data_transport(),
+        gl_android_support_context->get_jni_env());
+    setDataTransport(java_data_transport);
 
     std::shared_ptr<ReaderCardAdapter> rca(new ReaderCardAdapter());
     rca->setDataTransport(getDataTransport());

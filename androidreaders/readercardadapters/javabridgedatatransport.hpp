@@ -32,6 +32,8 @@ class JavaBridgeDataTransport : public DataTransport
   public:
     JavaBridgeDataTransport(jobject data_transport, JNIEnv *jni_env);
 
+    ~JavaBridgeDataTransport();
+
     std::string getTransportType() const override;
 
     bool connect() override;

@@ -29,6 +29,12 @@ class AndroidSupportContext
      */
     AndroidSupportContext(JNIEnv *env, jobject java_support_context);
 
+    /**
+     * Destroy the support context.
+     *
+     * We release the GlobalRef so that the Java object might be
+     * GC'd.
+     */
     ~AndroidSupportContext();
 
     /**
@@ -37,6 +43,11 @@ class AndroidSupportContext
      * Might be null.
      */
     jobject get_sam_data_transport();
+
+    /**
+     * Retrieve the Java IDataTransport for normal RFID operation.
+     */
+    jobject get_android_reader_data_transport();
 
     /**
      * This is a help function that attempts to retrieve the JNIEnv for
@@ -48,10 +59,12 @@ class AndroidSupportContext
     // A GlobalRef to our support context.
     jobject java_support_context_;
 
+    // Our JVM. Allows us to retrieve JNIEnv.
     JavaVM *java_vm_;
 
     jclass class_CardAnalysisSupportContext_;
-    jmethodID method_id_getSamDataTransport_;
+    jmethodID method_getSamDataTransport_;
+    jmethodID method_getAndroidRFIDDataTransport_;
 
     void load_java_attributes(JNIEnv *env);
 };

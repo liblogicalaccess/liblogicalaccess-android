@@ -28,16 +28,29 @@ AndroidSupportContext::~AndroidSupportContext()
 jobject AndroidSupportContext::get_sam_data_transport()
 {
     JNIEnv *env = JniHelper::env_from_vm(java_vm_);
-    return env->CallObjectMethod(java_support_context_, method_id_getSamDataTransport_);
+    return env->CallObjectMethod(java_support_context_, method_getSamDataTransport_);
+}
+
+jobject AndroidSupportContext::get_android_reader_data_transport()
+{
+
+    JNIEnv *env = JniHelper::env_from_vm(java_vm_);
+    return env->CallObjectMethod(java_support_context_,
+                                 method_getAndroidRFIDDataTransport_);
 }
 
 void AndroidSupportContext::load_java_attributes(JNIEnv *env)
 {
     java_vm_ = JniHelper::vm_from_env(env);
 
-    method_id_getSamDataTransport_ = JniHelper::find_method_on_class(
+    method_getSamDataTransport_ = JniHelper::find_method_on_class(
         env, "com/islog/rfidguard/llasupport/CardAnalysisSupportContext",
         "getSamDataTransport", "()Lcom/islog/rfidguard/llasupport/IDataTransport;");
+
+    method_getAndroidRFIDDataTransport_ = JniHelper::find_method_on_class(
+        env, "com/islog/rfidguard/llasupport/CardAnalysisSupportContext",
+        "getAndroidRFIDDataTransport",
+        "()Lcom/islog/rfidguard/llasupport/IDataTransport;");
 }
 
 JNIEnv *AndroidSupportContext::get_jni_env()
