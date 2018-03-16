@@ -136,19 +136,6 @@ class LIBLOGICALACCESS_API AndroidReaderUnit : public ISO7816ReaderUnit
     virtual void unSerialize(boost::property_tree::ptree &node);
 
     virtual std::shared_ptr<Chip> createChip(std::string type);
-
-    void setEnv(JNIEnv *env)
-    {
-        m_env = env;
-    };
-
-    static JNIEnv *getEnv()
-    {
-        return m_env;
-    };
-
-  private:
-    static JNIEnv *m_env;
 };
 }
 

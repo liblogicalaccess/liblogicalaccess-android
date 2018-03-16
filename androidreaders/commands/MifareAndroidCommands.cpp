@@ -1,6 +1,7 @@
 #include "MifareAndroidCommands.hpp"
 #include "../androidreaderunit.hpp"
 #include "../jnihelper.h"
+#include "../androidreaders/androidsupportcontext.hpp"
 
 namespace logicalaccess
 {
@@ -14,7 +15,7 @@ std::vector<unsigned char>
 MifareAndroidCommands::readBlock(int sector, int block, std::vector<unsigned char> keyA)
 {
     std::vector<unsigned char> result;
-    auto env = AndroidReaderUnit::getEnv();
+    auto env = gl_android_support_context->get_jni_env();
 
     jbyteArray array = env->NewByteArray(keyA.size());
     env->SetByteArrayRegion(array, 0, keyA.size(),

@@ -25,8 +25,6 @@
 
 namespace logicalaccess
 {
-JNIEnv *AndroidReaderUnit::m_env;
-
 AndroidReaderUnit::AndroidReaderUnit()
     : ISO7816ReaderUnit(READER_ANDROID)
 {
@@ -79,7 +77,7 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
 
         // get Uid from android
         std::vector<unsigned char> result;
-        auto env          = AndroidReaderUnit::getEnv();
+        auto env          = gl_android_support_context->get_jni_env();
         jclass cls        = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
         jclass jNDKhelper = (jclass)env->NewGlobalRef(cls);
         jmethodID getUID  = env->GetStaticMethodID(jNDKhelper, "getUID", "()[B");
@@ -185,18 +183,19 @@ bool AndroidReaderUnit::waitInsertion(unsigned int maxwait)
         std::chrono::steady_clock::now() + std::chrono::milliseconds(maxwait);
     do
     {
-        jclass cls        = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
-        jclass jNDKhelper = (jclass)m_env->NewGlobalRef(cls);
-        jmethodID getCurrentCardType = m_env->GetStaticMethodID(
+        auto env          = gl_android_support_context->get_jni_env();
+        jclass cls        = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
+        jclass jNDKhelper = (jclass)env->NewGlobalRef(cls);
+        jmethodID getCurrentCardType = env->GetStaticMethodID(
             jNDKhelper, "getCurrentCardType", "()Ljava/lang/String;");
         jstring jCardType =
-            (jstring)m_env->CallStaticObjectMethod(jNDKhelper, getCurrentCardType);
-        m_env->DeleteLocalRef(cls);
-        const char *s = m_env->GetStringUTFChars(jCardType, NULL);
+            (jstring)env->CallStaticObjectMethod(jNDKhelper, getCurrentCardType);
+        env->DeleteLocalRef(cls);
+        const char *s = env->GetStringUTFChars(jCardType, NULL);
         cardType      = s;
-        m_env->ReleaseStringUTFChars(jCardType, s);
+        env->ReleaseStringUTFChars(jCardType, s);
 
-        JniHelper::CheckException(m_env);
+        JniHelper::CheckException(env);
 
         inserted = (cardType != "");
         if (!inserted)
@@ -215,37 +214,40 @@ bool AndroidReaderUnit::waitInsertion(unsigned int maxwait)
 
 bool AndroidReaderUnit::waitRemoval(unsigned int /*maxwait*/)
 {
-    jclass cls           = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
-    jclass jNDKhelper    = (jclass)m_env->NewGlobalRef(cls);
-    jmethodID removeCard = m_env->GetStaticMethodID(jNDKhelper, "removeCard", "()V");
-    m_env->CallStaticVoidMethod(jNDKhelper, removeCard);
-    m_env->DeleteLocalRef(cls);
+    auto env             = gl_android_support_context->get_jni_env();
+    jclass cls           = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
+    jclass jNDKhelper    = (jclass)env->NewGlobalRef(cls);
+    jmethodID removeCard = env->GetStaticMethodID(jNDKhelper, "removeCard", "()V");
+    env->CallStaticVoidMethod(jNDKhelper, removeCard);
+    env->DeleteLocalRef(cls);
 
-    JniHelper::CheckException(m_env);
+    JniHelper::CheckException(env);
     return true;
 }
 
 bool AndroidReaderUnit::connect()
 {
-    jclass cls            = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
-    jclass jNDKhelper     = (jclass)m_env->NewGlobalRef(cls);
-    jmethodID connectCard = m_env->GetStaticMethodID(jNDKhelper, "connect", "()Z");
-    jboolean connected    = m_env->CallStaticBooleanMethod(jNDKhelper, connectCard);
-    m_env->DeleteLocalRef(cls);
+    auto env              = gl_android_support_context->get_jni_env();
+    jclass cls            = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
+    jclass jNDKhelper     = (jclass)env->NewGlobalRef(cls);
+    jmethodID connectCard = env->GetStaticMethodID(jNDKhelper, "connect", "()Z");
+    jboolean connected    = env->CallStaticBooleanMethod(jNDKhelper, connectCard);
+    env->DeleteLocalRef(cls);
 
-    JniHelper::CheckException(m_env);
+    JniHelper::CheckException(env);
     return (bool)(connected == JNI_TRUE);
 }
 
 void AndroidReaderUnit::disconnect()
 {
-    jclass cls               = m_env->FindClass("com/islog/liblogicalaccess/AndroidTag");
-    jclass jNDKhelper        = (jclass)m_env->NewGlobalRef(cls);
-    jmethodID disconnectCard = m_env->GetStaticMethodID(jNDKhelper, "disconnect", "()V");
-    m_env->CallStaticVoidMethod(jNDKhelper, disconnectCard);
-    m_env->DeleteLocalRef(cls);
+    auto env                 = gl_android_support_context->get_jni_env();
+    jclass cls               = env->FindClass("com/islog/liblogicalaccess/AndroidTag");
+    jclass jNDKhelper        = (jclass)env->NewGlobalRef(cls);
+    jmethodID disconnectCard = env->GetStaticMethodID(jNDKhelper, "disconnect", "()V");
+    env->CallStaticVoidMethod(jNDKhelper, disconnectCard);
+    env->DeleteLocalRef(cls);
 
-    JniHelper::CheckException(m_env);
+    JniHelper::CheckException(env);
 }
 
 bool AndroidReaderUnit::connectToReader()
