@@ -13,9 +13,6 @@
 
 namespace logicalaccess
 {
-
-JNIEnv *MorphoSAMReaderUnit::m_env = nullptr;
-
 bool MorphoSAMReaderUnit::waitInsertion(unsigned int maxwait)
 {
     d_insertedChip = createChip("SAM_AV2");

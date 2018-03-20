@@ -44,18 +44,5 @@ class MorphoSAMReaderUnit : public ISO7816ReaderUnit
     std::string getName() const override;
 
     std::string getReaderSerialNumber() override;
-
-    void setEnv(JNIEnv *env)
-    {
-        m_env = env;
-    };
-
-    static JNIEnv *getEnv()
-    {
-        return m_env;
-    };
-
-  private:
-    static JNIEnv *m_env;
 };
 }
