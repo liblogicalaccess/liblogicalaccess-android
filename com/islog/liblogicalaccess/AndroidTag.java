@@ -38,7 +38,7 @@ public class AndroidTag {
         for (String techno : techList) {
             // Mifare Classic/UltraLight Info
             String type = "Unknown";
-            if (techno.equals(MifareClassic.class.getName())) {
+            if (MifareClassic.class.getName().equals(techno)){
                 MifareClassic mifareClassicTag = MifareClassic.get(tag);
 
                 // Type Info

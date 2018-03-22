@@ -15,7 +15,7 @@ import com.orhanobut.logger.Logger;
 public class NFCHelper {
     private Activity mInstance = null;
 
-    public NFCHelper(Activity context, NFCEvent nfcEvent) {
+    public NFCHelper(Activity context) {
         mInstance = context;
 
         if (!mInstance.getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC)) {

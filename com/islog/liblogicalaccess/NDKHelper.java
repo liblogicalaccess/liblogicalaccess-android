@@ -11,13 +11,17 @@ public class NDKHelper {
 
     private static String NativeLibraryDirectory;
 
+    private NDKHelper() {
+    }
+
     public static void cacheNativeLibraryDirectory(Context context) {
         ApplicationInfo ai = context.getApplicationInfo();
 
         if ((ai.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
                 || (ai.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
             NativeLibraryDirectory = ai.nativeLibraryDir;
-        } else
+        }
+        else
             NativeLibraryDirectory = "/system/lib/"; //NON-NLS
     }
 
