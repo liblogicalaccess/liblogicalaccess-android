@@ -14,9 +14,6 @@ pipeline {
         PACKAGE_NAME = "LogicalAccessAndroid/2.1.0@cis/${BRANCH_NAME}"
     }
 
-    parameters {
-    }
-
     /**
      * This Jenkinsfile driven build will generate Conan package for multiple
      * combination of settings and options.
