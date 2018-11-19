@@ -28,7 +28,9 @@ pipeline {
                     node('linux') {
                         docker.image(ANDROID_DOCKER_IMAGE_NAME).inside {
                             checkout scm
-                            lla.conanPerformAllWithProfile('../arm_clang_android_21')
+                            dir('androidreaders') {
+                                lla.conanPerformAllWithProfile('../../arm_clang_android_21')
+                            }
                         }
                     }
                 }
