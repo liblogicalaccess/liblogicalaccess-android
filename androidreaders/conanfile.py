@@ -13,8 +13,7 @@ class LLAAndroidConan(ConanFile):
     LogicalAccess:LLA_BUILD_PKCS=False
     LogicalAccess:LLA_BUILD_IKS=False
     """
-    # Special variant.
-    requires = 'LogicalAccess/2.1.0@islog/test'
+    requires = 'LogicalAccess/2.1.0@cis/conan'
     generators = "cmake"
     
     def configure_cmake(self):
