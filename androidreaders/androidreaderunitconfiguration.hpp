@@ -14,7 +14,7 @@ namespace logicalaccess
 /**
  * \brief The ANDROID reader unit configuration base class.
  */
-class LIBLOGICALACCESS_API AndroidReaderUnitConfiguration : public ReaderUnitConfiguration
+class  AndroidReaderUnitConfiguration : public ReaderUnitConfiguration
 {
   public:
     /**

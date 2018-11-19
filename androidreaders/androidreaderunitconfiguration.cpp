@@ -8,10 +8,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <logicalaccess/readerproviders/readerunitconfiguration.hpp>
-
 #include "androidreaderprovider.hpp"
 #include "androidreaderunitconfiguration.hpp"
-#include "logicalaccess/logs.hpp"
+#include "logicalaccess/plugins/llacommon/logs.hpp"
 
 namespace logicalaccess
 {

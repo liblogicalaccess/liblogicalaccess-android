@@ -19,7 +19,7 @@
 #include "androidsupportcontext.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include <logicalaccess/logs.hpp>
+#include "logicalaccess/plugins/llacommon/logs.hpp"
 #include <thread>
 #include <android/log.h>
 

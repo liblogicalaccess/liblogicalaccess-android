@@ -19,7 +19,7 @@ class AndroidReaderProvider;
 /**
  * \brief The Android reader unit class.
  */
-class LIBLOGICALACCESS_API AndroidReaderUnit : public ISO7816ReaderUnit
+class  AndroidReaderUnit : public ISO7816ReaderUnit
 {
   public:
     /**

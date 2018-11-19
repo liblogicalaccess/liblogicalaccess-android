@@ -1,7 +1,7 @@
 #include "MifareAndroidCommands.hpp"
 #include "../androidreaderunit.hpp"
 #include "../jnihelper.h"
-#include "../androidreaders/androidsupportcontext.hpp"
+#include "../androidsupportcontext.hpp"
 
 namespace logicalaccess
 {

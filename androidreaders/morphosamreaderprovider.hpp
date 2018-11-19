@@ -16,7 +16,7 @@ namespace logicalaccess
  *
  * This is for the SAM slot on Morpho/Safran/Sagem tablet.
  */
-class LIBLOGICALACCESS_API MorphoSAMReaderProvider : public ReaderProvider
+class  MorphoSAMReaderProvider : public ReaderProvider
 {
   public:
     static std::shared_ptr<MorphoSAMReaderProvider> getSingletonInstance();

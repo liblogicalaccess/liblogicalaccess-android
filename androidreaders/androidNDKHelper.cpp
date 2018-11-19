@@ -1,5 +1,5 @@
 #include "androidNDKHelper.hpp"
-#include "logicalaccess/settings.hpp"
+#include "logicalaccess/plugins/llacommon/settings.hpp"
 #include <jni.h>
 #include <string>
 

@@ -5,7 +5,7 @@
  */
 
 #include "androidreaderprovider.hpp"
-#include "logicalaccess/logs.hpp"
+#include "logicalaccess/plugins/llacommon/logs.hpp"
 #include "logicalaccess/readerproviders/serialportdatatransport.hpp"
 
 namespace logicalaccess

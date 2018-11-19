@@ -14,7 +14,7 @@
 
 namespace logicalaccess
 {
-class LIBLOGICALACCESS_API MifareAndroidCommands : public Commands
+class  MifareAndroidCommands : public Commands
 {
   public:
     MifareAndroidCommands();

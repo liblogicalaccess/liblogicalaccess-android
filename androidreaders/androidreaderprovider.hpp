@@ -17,7 +17,7 @@ namespace logicalaccess
 /**
  * \brief Android Reader Provider class.
  */
-class LIBLOGICALACCESS_API AndroidReaderProvider : public ReaderProvider
+class  AndroidReaderProvider : public ReaderProvider
 {
   public:
     /**
