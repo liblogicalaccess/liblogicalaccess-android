@@ -23,7 +23,6 @@ pipeline {
         stage('Profile based builds') {
             // Build with no additional option, simply using a Conan profile file.
             // Also for now we assume any profile is android, which wont always be true
-            when { expression { params.BUILD_ANDROID } }
             steps {
                 script {
                     node('linux') {
