@@ -20,51 +20,13 @@ pipeline {
      */
 
     stages {
-        stage('Android ARM Debug') {
-            // Build with no additional option, simply using a Conan profile file.
-            // Also for now we assume any profile is android, which wont always be true
+        stage('Android') {
+            when { expression { params.BUILD_ANDROID } }
             steps {
                 script {
-                    node('linux') {
-                        docker.image(ANDROID_DOCKER_IMAGE_NAME).inside {
-                            checkout scm
-                            dir('androidreaders') {
-                                lla.conanPerformAllWithProfile('../../conan-profiles/arm_clang_android_21_debug')
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Android ARM') {
-            // Build with no additional option, simply using a Conan profile file.
-            // Also for now we assume any profile is android, which wont always be true
-            steps {
-                script {
-                    node('linux') {
-                        docker.image(ANDROID_DOCKER_IMAGE_NAME).inside {
-                            checkout scm
-                            dir('androidreaders') {
-                                lla.conanPerformAllWithProfile('../../conan-profiles/arm_clang_android_21')
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Android x86') {
-            // Build with no additional option, simply using a Conan profile file.
-            // Also for now we assume any profile is android, which wont always be true
-            steps {
-                script {
-                    node('linux') {
-                        docker.image(ANDROID_DOCKER_IMAGE_NAME).inside {
-                            checkout scm
-                            dir('androidreaders') {
-                                lla.conanPerformAllWithProfile('../../conan-profiles/x86_clang_android_21')
-                            }
-                        }
-                    }
+                    lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
+                                             'lla/arm_clang_android_21',
+                                             'lla/x86_clang_android_21'])
                 }
             }
         }

@@ -13,7 +13,8 @@ class LLAAndroidConan(ConanFile):
     LogicalAccess:LLA_BUILD_PKCS=False
     LogicalAccess:LLA_BUILD_IKS=False
     """
-    requires = 'LogicalAccess/2.1.0@cis/conan'
+    # We rely on islog/develop despite being in the master branch.
+    requires = 'LogicalAccess/2.1.0@islog/develop'
     generators = "cmake"
     
     def configure_cmake(self):

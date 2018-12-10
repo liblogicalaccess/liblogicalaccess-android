@@ -1,3 +1,0 @@
-[submodule "conan-profiles"]
-	path = conan-profiles
-	url = git@pontos.islog.private:islog/conan-profiles.git
