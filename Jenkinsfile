@@ -9,23 +9,19 @@ pipeline {
     }
 
     environment {
-        LINUX_DOCKER_IMAGE_NAME = 'docker-registry.islog.com:5000/conan-recipes-support:cis-latest'
         ANDROID_DOCKER_IMAGE_NAME = 'docker-registry.islog.com:5000/conan-recipes-support-android:cis-latest'
         PACKAGE_NAME = "LogicalAccessAndroid/2.1.0@cis/${BRANCH_NAME}"
     }
-
-    /**
-     * This Jenkinsfile driven build will generate Conan package for multiple
-     * combination of settings and options.
-     */
 
     stages {
         stage('Android') {
             steps {
                 script {
-                    lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
-                                             'lla/arm_clang_android_21',
-                                             'lla/x86_clang_android_21'])
+                    dir('androidreaders') {
+                        lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
+                                                 'lla/arm_clang_android_21',
+                                                 'lla/x86_clang_android_21'])
+                    }
                 }
             }
         }
