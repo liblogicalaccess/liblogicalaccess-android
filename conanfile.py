@@ -28,7 +28,7 @@ class LLAAndroidConan(ConanFile):
             # For MSVC we need to restrict configuration type to avoid issues.
             cmake.definitions['CMAKE_CONFIGURATION_TYPES'] = self.settings.build_type
             
-        cmake.configure()
+        cmake.configure(source_folder='androidreaders')
         return cmake
 
     def build(self):

@@ -17,11 +17,9 @@ pipeline {
         stage('Android') {
             steps {
                 script {
-                    dir('androidreaders') {
-                        lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
-                                                 'lla/arm_clang_android_21',
-                                                 'lla/x86_clang_android_21'])
-                    }
+                    lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
+                                             'lla/arm_clang_android_21',
+                                             'lla/x86_clang_android_21'])
                 }
             }
         }
