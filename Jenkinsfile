@@ -21,7 +21,6 @@ pipeline {
 
     stages {
         stage('Android') {
-            when { expression { params.BUILD_ANDROID } }
             steps {
                 script {
                     lla.startJobForProfiles(['lla/arm_clang_android_21_debug',
