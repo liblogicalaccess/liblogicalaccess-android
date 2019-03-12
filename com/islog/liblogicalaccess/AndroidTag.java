@@ -128,7 +128,7 @@ public class AndroidTag {
         }
     }
 
-    public static byte[] getUID() throws Exception {
+    public static byte[] getUID() {
         synchronized (lock) {
             if (myTag != null) {
                 Logger.d("Card UID: %s", Utils.bytesToHex(myTag.getId()));
