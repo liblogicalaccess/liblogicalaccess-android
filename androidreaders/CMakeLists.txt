@@ -39,7 +39,7 @@ target_compile_definitions(androidreaders PUBLIC BOOST_ASIO_HAS_STD_STRING_VIEW=
 
 target_link_libraries(androidreaders PUBLIC
   ${log-lib}
-  CONAN_PKG::LogicalAccess
+  CONAN_PKG::LogicalAccessPrivate
   CONAN_PKG::boost)
 
 install(FILES ${INCLUDES} DESTINATION include/logicalaccess/plugins/readers/android/)
