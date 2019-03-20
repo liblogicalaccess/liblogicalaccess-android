@@ -125,6 +125,10 @@ std::shared_ptr<Chip> AndroidReaderUnit::createChip(std::string type)
             std::dynamic_pointer_cast<DESFireISO7816Commands>(commands)->setSAMChip(
                 getSAMChip());
         }
+        else if (type == "Seos") {
+            rca->setResultChecker(std::make_shared<DESFireISO7816ResultChecker>());
+            commands = LibraryManager::getInstance()->getCommands("SeosISO7816");
+        }
         else if (type == "Mifare1K" || type == "Mifare4K")
         {
             commands = std::make_shared<MifareAndroidCommands>();
