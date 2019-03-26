@@ -8,7 +8,7 @@ class LLAAndroidConan(ConanFile):
     url = "<Package recipe repository url here, for issues about the package>"
     description = "<Description of LLA here>"
     settings = "os", "compiler", "build_type", "arch"
-
+    exports_sources = "CMakeLists.txt", "androidreaders*"
     default_options="""
     LogicalAccess:LLA_BUILD_PKCS=False
     LogicalAccess:LLA_BUILD_IKS=False
