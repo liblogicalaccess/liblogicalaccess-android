@@ -15,6 +15,7 @@ class LLAAndroidConan(ConanFile):
     """
     # We rely on islog/develop despite being in the master branch.
     requires = 'LogicalAccessPrivate/2.1.0@islog/develop'
+    revision = "scm"
     generators = "cmake"
     
     def configure_cmake(self):

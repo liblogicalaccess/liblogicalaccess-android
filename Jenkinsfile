@@ -11,6 +11,8 @@ pipeline {
     environment {
         ANDROID_DOCKER_IMAGE_NAME = 'docker-registry.islog.com:5000/conan-recipes-support-android:latest'
         PACKAGE_NAME = "LogicalAccessAndroid/2.1.0@islog/${BRANCH_NAME}"
+
+        CONAN_REVISIONS_ENABLED = 1
     }
 
     stages {
