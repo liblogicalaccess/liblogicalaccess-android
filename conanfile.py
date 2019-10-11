@@ -13,7 +13,7 @@ class LLAAndroidConan(ConanFile):
     LogicalAccess:LLA_BUILD_PKCS=False
     LogicalAccess:LLA_BUILD_IKS=False
     """
-    requires = 'LogicalAccessPrivate/2.1.0@islog/rc1'
+    requires = 'LogicalAccessPrivate/2.1.0@islog/master'
     revision = "scm"
     generators = "cmake"
     
