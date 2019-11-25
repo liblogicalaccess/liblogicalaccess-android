@@ -16,7 +16,7 @@ class LLAAndroidConan(ConanFile):
     revision = "scm"
     generators = "cmake"
 
-    def requirements():
+    def requirements(self):
         # Either use channel embedded in package metadata or use current git branch.
         try:
             self.requires('LogicalAccessPrivate/' + self.version + '@islog/' + self.channel)
